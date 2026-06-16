@@ -2,7 +2,7 @@
   <img src="https://img.shields.io/badge/Hermes_Agent-Skill-6f42c1?style=for-the-badge" alt="Hermes Agent Skill" />
   <img src="https://img.shields.io/badge/version-1.0.0-blue?style=for-the-badge" alt="Version" />
   <img src="https://img.shields.io/badge/storage-JSON-brightgreen?style=for-the-badge" alt="JSON Storage" />
-  <img src="https://img.shields.io/github/license/PeterCha90/link-booklet?style=for-the-badge" alt="License" />
+  <img src="https://img.shields.io/badge/license-MIT-lightgrey?style=for-the-badge" alt="MIT License" />
 </p>
 
 <h1 align="center">🔖 link-booklet</h1>
