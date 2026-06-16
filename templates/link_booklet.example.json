@@ -1,0 +1,23 @@
+{
+  "channel_id": "example-channel",
+  "source": "slack",
+  "items": [
+    {
+      "id": 1,
+      "status": "unread",
+      "category": "AI·Tools",
+      "title": "Example AI Tool",
+      "url": "https://example.com",
+      "source_type": "web",
+      "date": "2026-06-16 09:00",
+      "summary": "A concise summary of the link.",
+      "key_points": [
+        "First point",
+        "Second point"
+      ]
+    }
+  ],
+  "read_items": [],
+  "updated_at": "2026-06-16T09:00:00+09:00",
+  "notes": "Copy this file to ~/.hermes/link_booklets/<channel-id>.json and edit it for your channel."
+}
