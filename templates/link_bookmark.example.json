@@ -19,5 +19,5 @@
   ],
   "read_items": [],
   "updated_at": "2026-06-16T09:00:00+09:00",
-  "notes": "Copy this file to ~/.hermes/link_booklets/<channel-id>.json and edit it for your channel."
+  "notes": "Copy this file to ~/.hermes/link_bookmarks/<channel-id>.json and edit it for your channel."
 }

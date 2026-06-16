@@ -5,7 +5,7 @@
   <img src="https://img.shields.io/badge/license-MIT-lightgrey?style=for-the-badge" alt="MIT License" />
 </p>
 
-<h1 align="center">🔖 link-booklet</h1>
+<h1 align="center">🔖 link-bookmark</h1>
 <h3 align="center">채팅 속 링크를 읽지 않은 책갈피로 깔끔하게 정리하는 Hermes Skill</h3>
 
 <p align="center">
@@ -24,7 +24,7 @@
 ---
 
 <p align="center">
-  <img src="assets/link-booklet-screenshot.png" alt="link-booklet Slack screenshot" width="900" />
+  <img src="assets/link-bookmark-screenshot.png" alt="link-bookmark Slack screenshot" width="900" />
 </p>
 
 ---
@@ -58,7 +58,7 @@ A concise summary of the link.
 
 ```bash
 mkdir -p ~/.hermes/skills/productivity
-git clone https://github.com/PeterCha90/link-booklet.git ~/.hermes/skills/productivity/link-booklet
+git clone https://github.com/PeterCha90/link-bookmark.git ~/.hermes/skills/productivity/link-bookmark
 ```
 
 설치 후 Hermes를 재시작하거나 새 세션을 시작해야 스킬 로더가 새 스킬을 인식합니다.
@@ -66,16 +66,16 @@ git clone https://github.com/PeterCha90/link-booklet.git ~/.hermes/skills/produc
 ### 방법 B — ZIP으로 다운로드
 
 ```bash
-mkdir -p ~/.hermes/skills/productivity/link-booklet
-curl -L https://github.com/PeterCha90/link-booklet/archive/refs/heads/main.zip -o /tmp/link-booklet.zip
+mkdir -p ~/.hermes/skills/productivity/link-bookmark
+curl -L https://github.com/PeterCha90/link-bookmark/archive/refs/heads/main.zip -o /tmp/link-bookmark.zip
 python3 - <<'PY'
 import zipfile
 from pathlib import Path
-src = Path('/tmp/link-booklet.zip')
-dst = Path.home() / '.hermes' / 'skills' / 'productivity' / 'link-booklet'
+src = Path('/tmp/link-bookmark.zip')
+dst = Path.home() / '.hermes' / 'skills' / 'productivity' / 'link-bookmark'
 dst.mkdir(parents=True, exist_ok=True)
 with zipfile.ZipFile(src) as z:
-    prefix = 'link-booklet-main/'
+    prefix = 'link-bookmark-main/'
     for item in z.infolist():
         if item.is_dir():
             continue
@@ -95,7 +95,7 @@ PY
 터미널에서 스킬 파일이 있는지 확인합니다.
 
 ```bash
-test -f ~/.hermes/skills/productivity/link-booklet/SKILL.md && echo "installed"
+test -f ~/.hermes/skills/productivity/link-bookmark/SKILL.md && echo "installed"
 ```
 
 Hermes에서 이렇게 물어봐도 됩니다.
@@ -109,20 +109,20 @@ Hermes에서 이렇게 물어봐도 됩니다.
 채널/프로젝트별 JSON 파일을 하나 만듭니다. 파일명은 Slack 채널 ID, Discord 채널 ID, 프로젝트명 등 안정적인 context key를 쓰면 됩니다.
 
 ```bash
-mkdir -p ~/.hermes/link_booklets
-cp ~/.hermes/skills/productivity/link-booklet/templates/link_booklet.example.json ~/.hermes/link_booklets/my-channel.json
+mkdir -p ~/.hermes/link_bookmarks
+cp ~/.hermes/skills/productivity/link-bookmark/templates/link_bookmark.example.json ~/.hermes/link_bookmarks/my-channel.json
 ```
 
 JSON이 유효한지 확인하려면:
 
 ```bash
-python3 -m json.tool ~/.hermes/link_booklets/my-channel.json >/tmp/link-booklet-check.json
+python3 -m json.tool ~/.hermes/link_bookmarks/my-channel.json >/tmp/link-bookmark-check.json
 ```
 
 Slack에서는 보통 채널 ID를 파일명으로 쓰면 편합니다.
 
 ```text
-~/.hermes/link_booklets/C0123456789.json
+~/.hermes/link_bookmarks/C0123456789.json
 ```
 
 ## Hermes에게 이렇게 요청하세요
@@ -147,24 +147,24 @@ Hermes는 사용자가 보는 번호를 “현재 읽지 않은 목록의 표시
 
 ## helper script 사용법
 
-스킬에 포함된 `scripts/link_booklet.py`는 선택 사항이지만, JSON 조작을 정확하게 하고 싶을 때 유용합니다.
+스킬에 포함된 `scripts/link_bookmark.py`는 선택 사항이지만, JSON 조작을 정확하게 하고 싶을 때 유용합니다.
 
 읽지 않은 책갈피 보기:
 
 ```bash
-python ~/.hermes/skills/productivity/link-booklet/scripts/link_booklet.py show ~/.hermes/link_booklets/my-channel.json --locale ko
+python ~/.hermes/skills/productivity/link-bookmark/scripts/link_bookmark.py show ~/.hermes/link_bookmarks/my-channel.json --locale ko
 ```
 
 영어 출력으로 보기:
 
 ```bash
-python ~/.hermes/skills/productivity/link-booklet/scripts/link_booklet.py show ~/.hermes/link_booklets/my-channel.json
+python ~/.hermes/skills/productivity/link-bookmark/scripts/link_bookmark.py show ~/.hermes/link_bookmarks/my-channel.json
 ```
 
 링크 추가:
 
 ```bash
-python ~/.hermes/skills/productivity/link-booklet/scripts/link_booklet.py add ~/.hermes/link_booklets/my-channel.json \
+python ~/.hermes/skills/productivity/link-bookmark/scripts/link_bookmark.py add ~/.hermes/link_bookmarks/my-channel.json \
   --title "Example AI Tool" \
   --url "https://example.com" \
   --category "AI·Tools" \
@@ -174,13 +174,13 @@ python ~/.hermes/skills/productivity/link-booklet/scripts/link_booklet.py add ~/
 표시 번호 기준으로 읽음 처리:
 
 ```bash
-python ~/.hermes/skills/productivity/link-booklet/scripts/link_booklet.py mark-read ~/.hermes/link_booklets/my-channel.json 1 3
+python ~/.hermes/skills/productivity/link-bookmark/scripts/link_bookmark.py mark-read ~/.hermes/link_bookmarks/my-channel.json 1 3
 ```
 
 안정적인 JSON ID 기준으로 읽음 처리:
 
 ```bash
-python ~/.hermes/skills/productivity/link-booklet/scripts/link_booklet.py mark-read ~/.hermes/link_booklets/my-channel.json --by-id 42
+python ~/.hermes/skills/productivity/link-bookmark/scripts/link_bookmark.py mark-read ~/.hermes/link_bookmarks/my-channel.json --by-id 42
 ```
 
 ## JSON 형식
@@ -221,8 +221,8 @@ python ~/.hermes/skills/productivity/link-booklet/scripts/link_booklet.py mark-r
 기존에 `~/.hermes/link_reports/<channel-id>.json`를 쓰고 있었다면 새 위치로 복사하면 됩니다.
 
 ```bash
-mkdir -p ~/.hermes/link_booklets
-cp ~/.hermes/link_reports/<channel-id>.json ~/.hermes/link_booklets/<channel-id>.json
+mkdir -p ~/.hermes/link_bookmarks
+cp ~/.hermes/link_reports/<channel-id>.json ~/.hermes/link_bookmarks/<channel-id>.json
 ```
 
 스키마는 호환됩니다.
@@ -242,8 +242,8 @@ SKILL.md
 README.md
 README.en.md
 LICENSE
-templates/link_booklet.example.json
-scripts/link_booklet.py
+templates/link_bookmark.example.json
+scripts/link_bookmark.py
 ```
 
 ## 라이선스

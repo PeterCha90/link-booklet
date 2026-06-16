@@ -1,6 +1,6 @@
-# link-booklet
+# link-bookmark
 
-A portable Hermes Agent skill for keeping an unread link booklet from Slack, Discord, Telegram, or any chat channel.
+A portable Hermes Agent skill for keeping an unread link bookmark from Slack, Discord, Telegram, or any chat channel.
 
 It stores links in a small JSON file, renders a clean unread digest, and marks items read only when the user explicitly asks.
 
@@ -17,7 +17,7 @@ It stores links in a small JSON file, renders a clean unread digest, and marks i
 Example output:
 
 ```md
-:bookmark_tabs: *Unread Link Booklet*
+:bookmark_tabs: *Unread Link Bookmark*
 
 `AI`
 
@@ -46,7 +46,7 @@ A concise summary of the link.
 
 ```bash
 mkdir -p ~/.hermes/skills/productivity
-git clone https://github.com/PeterCha90/link-booklet.git ~/.hermes/skills/productivity/link-booklet
+git clone https://github.com/PeterCha90/link-bookmark.git ~/.hermes/skills/productivity/link-bookmark
 ```
 
 Restart Hermes or start a new Hermes session so the skill loader sees the new skill.
@@ -54,16 +54,16 @@ Restart Hermes or start a new Hermes session so the skill loader sees the new sk
 ### Option B — download ZIP
 
 ```bash
-mkdir -p ~/.hermes/skills/productivity/link-booklet
-curl -L https://github.com/PeterCha90/link-booklet/archive/refs/heads/main.zip -o /tmp/link-booklet.zip
+mkdir -p ~/.hermes/skills/productivity/link-bookmark
+curl -L https://github.com/PeterCha90/link-bookmark/archive/refs/heads/main.zip -o /tmp/link-bookmark.zip
 python3 - <<'PY'
 import zipfile
 from pathlib import Path
-src = Path('/tmp/link-booklet.zip')
-dst = Path.home() / '.hermes' / 'skills' / 'productivity' / 'link-booklet'
+src = Path('/tmp/link-bookmark.zip')
+dst = Path.home() / '.hermes' / 'skills' / 'productivity' / 'link-bookmark'
 dst.mkdir(parents=True, exist_ok=True)
 with zipfile.ZipFile(src) as z:
-    prefix = 'link-booklet-main/'
+    prefix = 'link-bookmark-main/'
     for item in z.infolist():
         if item.is_dir():
             continue
@@ -89,28 +89,28 @@ What skills are available for bookmarks?
 Or from a terminal, check that the skill file exists:
 
 ```bash
-test -f ~/.hermes/skills/productivity/link-booklet/SKILL.md && echo "installed"
+test -f ~/.hermes/skills/productivity/link-bookmark/SKILL.md && echo "installed"
 ```
 
-## Set up your first booklet JSON
+## Set up your first bookmark JSON
 
 Create a channel/context JSON file. The filename can be a Slack channel ID, Discord channel ID, project name, or any stable context key.
 
 ```bash
-mkdir -p ~/.hermes/link_booklets
-cp ~/.hermes/skills/productivity/link-booklet/templates/link_booklet.example.json ~/.hermes/link_booklets/my-channel.json
+mkdir -p ~/.hermes/link_bookmarks
+cp ~/.hermes/skills/productivity/link-bookmark/templates/link_bookmark.example.json ~/.hermes/link_bookmarks/my-channel.json
 ```
 
 Edit the file:
 
 ```bash
-python3 -m json.tool ~/.hermes/link_booklets/my-channel.json >/tmp/link-booklet-check.json
+python3 -m json.tool ~/.hermes/link_bookmarks/my-channel.json >/tmp/link-bookmark-check.json
 ```
 
 For Slack, a practical filename is the Slack channel ID:
 
 ```text
-~/.hermes/link_booklets/C0123456789.json
+~/.hermes/link_bookmarks/C0123456789.json
 ```
 
 ## Ask Hermes to use it
@@ -126,7 +126,7 @@ Show my bookmarks for this channel.
 ```
 
 ```text
-Add this link to the booklet: https://example.com
+Add this link to the bookmark: https://example.com
 ```
 
 ```text
@@ -146,19 +146,19 @@ The included script is optional but useful for deterministic operations.
 Show unread links:
 
 ```bash
-python ~/.hermes/skills/productivity/link-booklet/scripts/link_booklet.py show ~/.hermes/link_booklets/my-channel.json
+python ~/.hermes/skills/productivity/link-bookmark/scripts/link_bookmark.py show ~/.hermes/link_bookmarks/my-channel.json
 ```
 
 Show Korean output:
 
 ```bash
-python ~/.hermes/skills/productivity/link-booklet/scripts/link_booklet.py show ~/.hermes/link_booklets/my-channel.json --locale ko
+python ~/.hermes/skills/productivity/link-bookmark/scripts/link_bookmark.py show ~/.hermes/link_bookmarks/my-channel.json --locale ko
 ```
 
 Add a link:
 
 ```bash
-python ~/.hermes/skills/productivity/link-booklet/scripts/link_booklet.py add ~/.hermes/link_booklets/my-channel.json \
+python ~/.hermes/skills/productivity/link-bookmark/scripts/link_bookmark.py add ~/.hermes/link_bookmarks/my-channel.json \
   --title "Example AI Tool" \
   --url "https://example.com" \
   --category "AI·Tools" \
@@ -168,13 +168,13 @@ python ~/.hermes/skills/productivity/link-booklet/scripts/link_booklet.py add ~/
 Mark displayed items read:
 
 ```bash
-python ~/.hermes/skills/productivity/link-booklet/scripts/link_booklet.py mark-read ~/.hermes/link_booklets/my-channel.json 1 3
+python ~/.hermes/skills/productivity/link-bookmark/scripts/link_bookmark.py mark-read ~/.hermes/link_bookmarks/my-channel.json 1 3
 ```
 
 Mark stable JSON IDs read explicitly:
 
 ```bash
-python ~/.hermes/skills/productivity/link-booklet/scripts/link_booklet.py mark-read ~/.hermes/link_booklets/my-channel.json --by-id 42
+python ~/.hermes/skills/productivity/link-bookmark/scripts/link_bookmark.py mark-read ~/.hermes/link_bookmarks/my-channel.json --by-id 42
 ```
 
 ## JSON format
@@ -207,15 +207,15 @@ python ~/.hermes/skills/productivity/link-booklet/scripts/link_booklet.py mark-r
 If you previously used `~/.hermes/link_reports/<channel-id>.json`, copy it into the new default location:
 
 ```bash
-mkdir -p ~/.hermes/link_booklets
-cp ~/.hermes/link_reports/<channel-id>.json ~/.hermes/link_booklets/<channel-id>.json
+mkdir -p ~/.hermes/link_bookmarks
+cp ~/.hermes/link_reports/<channel-id>.json ~/.hermes/link_bookmarks/<channel-id>.json
 ```
 
 The schema is compatible.
 
 ## Important behavior
 
-- Showing a booklet does **not** mark items read.
+- Showing a bookmark does **not** mark items read.
 - Read marking happens only after explicit user instruction.
 - Display numbers are temporary and change after items are read.
 - Stable JSON IDs must never be renumbered.
@@ -228,8 +228,8 @@ SKILL.md
 README.md
 README.en.md
 LICENSE
-templates/link_booklet.example.json
-scripts/link_booklet.py
+templates/link_bookmark.example.json
+scripts/link_bookmark.py
 ```
 
 ## License

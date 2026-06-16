@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Manage Link Booklet JSON files for Hermes skills."""
+"""Manage Link Bookmark JSON files for Hermes skills."""
 from __future__ import annotations
 
 import argparse
@@ -13,7 +13,7 @@ def now_iso() -> str:
     return datetime.now().astimezone().isoformat(timespec="seconds")
 
 
-def load_booklet(path: Path) -> dict[str, Any]:
+def load_bookmark(path: Path) -> dict[str, Any]:
     if not path.exists():
         return {
             "channel_id": path.stem,
@@ -21,12 +21,12 @@ def load_booklet(path: Path) -> dict[str, Any]:
             "items": [],
             "read_items": [],
             "updated_at": now_iso(),
-            "notes": "Created by link-booklet helper.",
+            "notes": "Created by link-bookmark helper.",
         }
     return json.loads(path.read_text(encoding="utf-8"))
 
 
-def save_booklet(path: Path, data: dict[str, Any]) -> None:
+def save_bookmark(path: Path, data: dict[str, Any]) -> None:
     path.parent.mkdir(parents=True, exist_ok=True)
     data["updated_at"] = now_iso()
     path.write_text(json.dumps(data, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
@@ -62,8 +62,8 @@ def display_date(item: dict[str, Any]) -> str:
 
 def render_markdown(data: dict[str, Any], locale: str = "en") -> str:
     items = unread_items(data)
-    header = ":bookmark_tabs: *읽지 않은 책갈피*" if locale == "ko" else ":bookmark_tabs: *Unread Link Booklet*"
-    empty = "읽지 않은 책갈피가 없습니다." if locale == "ko" else "No unread links."
+    header = ":bookmark_tabs: *읽지 않은 책갈피*" if locale == "ko" else ":bookmark_tabs: *Unread Link Bookmark*"
+    empty = "읽지 않은 책갈피가 없습니다." if locale == "ko" else "No unread bookmarks."
     date_label = "등록일" if locale == "ko" else "Added"
 
     lines: list[str] = [header, ""]
@@ -105,13 +105,13 @@ def render_markdown(data: dict[str, Any], locale: str = "en") -> str:
 
 
 def cmd_show(args: argparse.Namespace) -> None:
-    data = load_booklet(Path(args.path).expanduser())
+    data = load_bookmark(Path(args.path).expanduser())
     print(render_markdown(data, args.locale))
 
 
 def cmd_mark_read(args: argparse.Namespace) -> None:
     path = Path(args.path).expanduser()
-    data = load_booklet(path)
+    data = load_bookmark(path)
     requested = [int(x) for x in args.ids]
 
     if args.by_id:
@@ -135,13 +135,13 @@ def cmd_mark_read(args: argparse.Namespace) -> None:
                 item["status"] = "read"
         except (TypeError, ValueError):
             continue
-    save_booklet(path, data)
+    save_bookmark(path, data)
     print("Marked read: " + ", ".join(map(str, requested)))
 
 
 def cmd_add(args: argparse.Namespace) -> None:
     path = Path(args.path).expanduser()
-    data = load_booklet(path)
+    data = load_bookmark(path)
     items = data.setdefault("items", [])
     existing_ids = [int(x.get("id", 0)) for x in items if str(x.get("id", "")).isdigit()]
     next_id = max(existing_ids or [0]) + 1
@@ -157,15 +157,15 @@ def cmd_add(args: argparse.Namespace) -> None:
         "key_points": args.key_points or [],
     }
     items.append(item)
-    save_booklet(path, data)
+    save_bookmark(path, data)
     print(f"Added: {next_id}")
 
 
 def main() -> None:
-    parser = argparse.ArgumentParser(description="Manage Link Booklet JSON files")
+    parser = argparse.ArgumentParser(description="Manage Link Bookmark JSON files")
     sub = parser.add_subparsers(required=True)
 
-    show = sub.add_parser("show", help="Render unread markdown booklet")
+    show = sub.add_parser("show", help="Render unread markdown bookmarks")
     show.add_argument("path")
     show.add_argument("--locale", choices=["en", "ko"], default="en")
     show.set_defaults(func=cmd_show)

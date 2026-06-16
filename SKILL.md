@@ -1,5 +1,5 @@
 ---
-name: link-booklet
+name: link-bookmark
 description: Use when collecting, maintaining, or showing unread link bookmarks from chat channels. Stores link metadata in channel-specific JSON files, renders clean unread digests, and supports explicit read marking.
 version: 1.0.0
 author: Hermes Agent
@@ -11,13 +11,13 @@ metadata:
     related_skills: []
 ---
 
-# Link Booklet
+# Link Bookmark
 
 ## Overview
 
-Link Booklet is a lightweight Hermes skill for turning links shared in chat into a clean unread bookmark digest. It is useful for Slack, Discord, Telegram, or any other channel where people drop links that should be collected, summarized, and reviewed later.
+Link Bookmark is a lightweight Hermes skill for turning links shared in chat into a clean unread bookmark digest. It is useful for Slack, Discord, Telegram, or any other channel where people drop links that should be collected, summarized, and reviewed later.
 
-The skill uses a simple JSON file as the source of truth. Each channel gets its own booklet file under `~/.hermes/link_booklets/` by default. Hermes reads the file, filters unread items, groups them by broad category, re-numbers them for display, and renders a concise report. Items are marked read only when the user explicitly asks.
+The skill uses a simple JSON file as the source of truth. Each channel gets its own bookmark file under `~/.hermes/link_bookmarks/` by default. Hermes reads the file, filters unread items, groups them by broad category, re-numbers them for display, and renders a concise report. Items are marked read only when the user explicitly asks.
 
 This skill intentionally does not require Slack/Discord history APIs. If Hermes cannot search channel history, add links from messages that are delivered to Hermes, from URLs supplied by the user, or from manually edited JSON.
 
@@ -29,7 +29,7 @@ Use this skill when the user asks for things like:
 - "책갈피 보여줘" / "책갈피"
 - "show unread links"
 - "summarize unread links"
-- "add this link to the booklet"
+- "add this link to the bookmark list"
 - "mark 1 and 3 as read"
 - "1번 읽음 처리해줘"
 - "전부 읽음 처리해줘"
@@ -45,7 +45,7 @@ Do not use this skill for:
 Recommended default path:
 
 ```text
-~/.hermes/link_booklets/<channel-or-context-id>.json
+~/.hermes/link_bookmarks/<channel-or-context-id>.json
 ```
 
 For backward compatibility with older link-report setups, you may also read from:
@@ -88,7 +88,7 @@ Required item fields are `id`, `url`, and `title`. The other fields improve rend
 Default report format:
 
 ```md
-:bookmark_tabs: *Unread Link Booklet*
+:bookmark_tabs: *Unread Link Bookmark*
 
 `AI`
 
@@ -140,10 +140,10 @@ If no category exists, use `Other` for English output or `기타` for Korean out
 
 ## Operating Procedure
 
-### Show unread booklet
+### Show unread bookmarks
 
 1. Identify the current channel/context ID.
-2. Read `~/.hermes/link_booklets/<channel-id>.json`. If absent and a legacy file exists, read `~/.hermes/link_reports/<channel-id>.json`.
+2. Read `~/.hermes/link_bookmarks/<channel-id>.json`. If absent and a legacy file exists, read `~/.hermes/link_reports/<channel-id>.json`.
 3. Filter items where `status == "unread"` and the stable `id` is not in `read_items`.
 4. Normalize categories.
 5. Group items by category while preserving item order.
@@ -174,14 +174,14 @@ Only mark read when the user explicitly requests it.
 
 ## Helper Script
 
-This repository includes `scripts/link_booklet.py` for deterministic operations:
+This repository includes `scripts/link_bookmark.py` for deterministic operations:
 
 ```bash
-python scripts/link_booklet.py show ~/.hermes/link_booklets/my-channel.json
-python scripts/link_booklet.py show ~/.hermes/link_booklets/my-channel.json --locale ko
-python scripts/link_booklet.py add ~/.hermes/link_booklets/my-channel.json --title "Example" --url "https://example.com" --category "AI·Tools" --summary "Short summary"
-python scripts/link_booklet.py mark-read ~/.hermes/link_booklets/my-channel.json 1 3 5
-python scripts/link_booklet.py mark-read ~/.hermes/link_booklets/my-channel.json --by-id 42
+python scripts/link_bookmark.py show ~/.hermes/link_bookmarks/my-channel.json
+python scripts/link_bookmark.py show ~/.hermes/link_bookmarks/my-channel.json --locale ko
+python scripts/link_bookmark.py add ~/.hermes/link_bookmarks/my-channel.json --title "Example" --url "https://example.com" --category "AI·Tools" --summary "Short summary"
+python scripts/link_bookmark.py mark-read ~/.hermes/link_bookmarks/my-channel.json 1 3 5
+python scripts/link_bookmark.py mark-read ~/.hermes/link_bookmarks/my-channel.json --by-id 42
 ```
 
 ## Common Pitfalls
