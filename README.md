@@ -1,8 +1,33 @@
-# link-booklet
+<p align="center">
+  <img src="https://img.shields.io/badge/Hermes_Agent-Skill-6f42c1?style=for-the-badge" alt="Hermes Agent Skill" />
+  <img src="https://img.shields.io/badge/version-1.0.0-blue?style=for-the-badge" alt="Version" />
+  <img src="https://img.shields.io/badge/storage-JSON-brightgreen?style=for-the-badge" alt="JSON Storage" />
+  <img src="https://img.shields.io/github/license/PeterCha90/link-booklet?style=for-the-badge" alt="License" />
+</p>
 
-Hermes Agent에서 Slack, Discord, Telegram 같은 채팅 채널의 링크를 “읽지 않은 책갈피”로 모아두고 깔끔하게 보여주는 스킬입니다.
+<h1 align="center">🔖 link-booklet</h1>
+<h3 align="center">채팅 속 링크를 읽지 않은 책갈피로 깔끔하게 정리하는 Hermes Skill</h3>
 
-[English README 보기](./README.en.md)
+<p align="center">
+  Slack, Discord, Telegram 같은 채팅 채널에 쌓이는 링크를<br/>
+  <b>카테고리별 읽지 않은 책갈피</b>로 저장하고 보여줍니다.
+</p>
+
+<p align="center">
+  No history API required. JSON 기반. 표시 번호는 매번 깔끔하게 1부터.
+</p>
+
+<p align="center">
+  <a href="./README.en.md"><b>English README</b></a>
+</p>
+
+---
+
+<p align="center">
+  <img src="assets/link-booklet-screenshot.png" alt="link-booklet Slack screenshot" width="900" />
+</p>
+
+---
 
 ## 무엇을 해주나요?
 
