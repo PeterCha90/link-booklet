@@ -1,33 +1,20 @@
 # link-booklet
 
-A portable Hermes Agent skill for keeping an unread link booklet from Slack, Discord, Telegram, or any chat channel.
+Hermes Agent에서 Slack, Discord, Telegram 같은 채팅 채널의 링크를 “읽지 않은 책갈피”로 모아두고 깔끔하게 보여주는 스킬입니다.
 
-It stores links in a small JSON file, renders a clean unread digest, and marks items read only when the user explicitly asks.
+[English README 보기](./README.en.md)
 
-## What it does
+## 무엇을 해주나요?
 
-- Collects links into a channel-specific JSON file
-- Shows only unread links
-- Groups links by broad category
-- Re-numbers unread items from `1..N` every time
-- Keeps stable internal JSON IDs so read state is safe
-- Supports Korean `책갈피` and English bookmark workflows
-- Requires no Slack/Discord history API
+- 채널/프로젝트별 JSON 파일에 링크를 저장합니다.
+- 아직 읽지 않은 링크만 보여줍니다.
+- 카테고리별로 묶어서 보여줍니다.
+- 보여줄 때마다 읽지 않은 항목을 `1..N`으로 다시 번호 매깁니다.
+- 내부 JSON의 안정적인 `id`는 유지해서 읽음 처리가 꼬이지 않게 합니다.
+- 한국어 `책갈피` 워크플로우와 영어 bookmark 워크플로우를 모두 지원합니다.
+- Slack/Discord 히스토리 API가 없어도 동작합니다.
 
-Example output:
-
-```md
-:bookmark_tabs: *Unread Link Booklet*
-
-`AI`
-
-**1. Example AI Tool**  
-Added: 2026-06-16  
-A concise summary of the link.  
-[Link](https://example.com)
-```
-
-Korean output:
+예시 출력:
 
 ```md
 :bookmark_tabs: *읽지 않은 책갈피*
@@ -40,18 +27,18 @@ A concise summary of the link.
 [Link](https://example.com)
 ```
 
-## Install
+## 설치 방법
 
-### Option A — clone directly into Hermes skills
+### 방법 A — Hermes 스킬 폴더에 바로 clone
 
 ```bash
 mkdir -p ~/.hermes/skills/productivity
 git clone https://github.com/PeterCha90/link-booklet.git ~/.hermes/skills/productivity/link-booklet
 ```
 
-Restart Hermes or start a new Hermes session so the skill loader sees the new skill.
+설치 후 Hermes를 재시작하거나 새 세션을 시작해야 스킬 로더가 새 스킬을 인식합니다.
 
-### Option B — download ZIP
+### 방법 B — ZIP으로 다운로드
 
 ```bash
 mkdir -p ~/.hermes/skills/productivity/link-booklet
@@ -76,104 +63,102 @@ with zipfile.ZipFile(src) as z:
 PY
 ```
 
-Restart Hermes or start a new Hermes session.
+설치 후 Hermes를 재시작하거나 새 세션을 시작하세요.
 
-## Verify installation
+## 설치 확인
 
-In Hermes, ask:
-
-```text
-What skills are available for bookmarks?
-```
-
-Or from a terminal, check that the skill file exists:
+터미널에서 스킬 파일이 있는지 확인합니다.
 
 ```bash
 test -f ~/.hermes/skills/productivity/link-booklet/SKILL.md && echo "installed"
 ```
 
-## Set up your first booklet JSON
+Hermes에서 이렇게 물어봐도 됩니다.
 
-Create a channel/context JSON file. The filename can be a Slack channel ID, Discord channel ID, project name, or any stable context key.
+```text
+책갈피 관련 스킬 뭐 있어?
+```
+
+## 첫 책갈피 JSON 만들기
+
+채널/프로젝트별 JSON 파일을 하나 만듭니다. 파일명은 Slack 채널 ID, Discord 채널 ID, 프로젝트명 등 안정적인 context key를 쓰면 됩니다.
 
 ```bash
 mkdir -p ~/.hermes/link_booklets
 cp ~/.hermes/skills/productivity/link-booklet/templates/link_booklet.example.json ~/.hermes/link_booklets/my-channel.json
 ```
 
-Edit the file:
+JSON이 유효한지 확인하려면:
 
 ```bash
 python3 -m json.tool ~/.hermes/link_booklets/my-channel.json >/tmp/link-booklet-check.json
 ```
 
-For Slack, a practical filename is the Slack channel ID:
+Slack에서는 보통 채널 ID를 파일명으로 쓰면 편합니다.
 
 ```text
 ~/.hermes/link_booklets/C0123456789.json
 ```
 
-## Ask Hermes to use it
-
-Examples:
-
-```text
-Show my bookmarks for this channel.
-```
+## Hermes에게 이렇게 요청하세요
 
 ```text
 책갈피 보여줘
 ```
 
 ```text
-Add this link to the booklet: https://example.com
+이 링크 책갈피에 추가해줘: https://example.com
 ```
 
 ```text
-Mark 1 and 3 as read.
+1번, 3번 읽음 처리해줘
 ```
 
 ```text
-1번 읽음 처리해줘
+전부 읽음 처리해줘
 ```
 
-Hermes should treat displayed numbers as the current unread list positions. It should not treat them as stable JSON IDs unless you explicitly say `by id`.
+Hermes는 사용자가 보는 번호를 “현재 읽지 않은 목록의 표시 번호”로 다뤄야 합니다. 안정적인 JSON `id`로 처리해야 할 때만 `raw id` 또는 `by id`라고 명시하세요.
 
-## Helper script usage
+## helper script 사용법
 
-The included script is optional but useful for deterministic operations.
+스킬에 포함된 `scripts/link_booklet.py`는 선택 사항이지만, JSON 조작을 정확하게 하고 싶을 때 유용합니다.
 
-Show unread links:
-
-```bash
-python ~/.hermes/skills/productivity/link-booklet/scripts/link_booklet.py show ~/.hermes/link_booklets/my-channel.json
-```
-
-Show Korean output:
+읽지 않은 책갈피 보기:
 
 ```bash
 python ~/.hermes/skills/productivity/link-booklet/scripts/link_booklet.py show ~/.hermes/link_booklets/my-channel.json --locale ko
 ```
 
-Add a link:
+영어 출력으로 보기:
 
 ```bash
-python ~/.hermes/skills/productivity/link-booklet/scripts/link_booklet.py add ~/.hermes/link_booklets/my-channel.json   --title "Example AI Tool"   --url "https://example.com"   --category "AI·Tools"   --summary "A concise summary of the link."
+python ~/.hermes/skills/productivity/link-booklet/scripts/link_booklet.py show ~/.hermes/link_booklets/my-channel.json
 ```
 
-Mark displayed items read:
+링크 추가:
+
+```bash
+python ~/.hermes/skills/productivity/link-booklet/scripts/link_booklet.py add ~/.hermes/link_booklets/my-channel.json \
+  --title "Example AI Tool" \
+  --url "https://example.com" \
+  --category "AI·Tools" \
+  --summary "A concise summary of the link."
+```
+
+표시 번호 기준으로 읽음 처리:
 
 ```bash
 python ~/.hermes/skills/productivity/link-booklet/scripts/link_booklet.py mark-read ~/.hermes/link_booklets/my-channel.json 1 3
 ```
 
-Mark stable JSON IDs read explicitly:
+안정적인 JSON ID 기준으로 읽음 처리:
 
 ```bash
 python ~/.hermes/skills/productivity/link-booklet/scripts/link_booklet.py mark-read ~/.hermes/link_booklets/my-channel.json --by-id 42
 ```
 
-## JSON format
+## JSON 형식
 
 ```json
 {
@@ -198,35 +183,44 @@ python ~/.hermes/skills/productivity/link-booklet/scripts/link_booklet.py mark-r
 }
 ```
 
-## Migrating from `link-report`
+### 주요 필드
 
-If you previously used `~/.hermes/link_reports/<channel-id>.json`, copy it into the new default location:
+- `id`: 내부 안정 ID입니다. 한 번 만든 뒤 renumber하지 마세요.
+- `status`: `unread` 또는 `read`입니다.
+- `category`: 저장할 때는 자세히 써도 됩니다. 출력할 때는 앞부분만 넓은 카테고리로 보여줍니다.
+- `date`: 등록일입니다. 출력에서는 `YYYY-MM-DD`만 보여줍니다.
+- `read_items`: 읽음 처리된 안정 ID 목록입니다.
+
+## 기존 `link-report`에서 이전하기
+
+기존에 `~/.hermes/link_reports/<channel-id>.json`를 쓰고 있었다면 새 위치로 복사하면 됩니다.
 
 ```bash
 mkdir -p ~/.hermes/link_booklets
 cp ~/.hermes/link_reports/<channel-id>.json ~/.hermes/link_booklets/<channel-id>.json
 ```
 
-The schema is compatible.
+스키마는 호환됩니다.
 
-## Important behavior
+## 중요한 동작 규칙
 
-- Showing a booklet does **not** mark items read.
-- Read marking happens only after explicit user instruction.
-- Display numbers are temporary and change after items are read.
-- Stable JSON IDs must never be renumbered.
-- The skill does not magically read historical Slack/Discord messages unless your Hermes gateway exposes them. It works best with messages delivered to Hermes or links explicitly given to Hermes.
+- 책갈피를 보여주는 것만으로는 읽음 처리하지 않습니다.
+- 사용자가 명시적으로 요청할 때만 읽음 처리합니다.
+- 화면에 보이는 번호는 임시 번호입니다. 읽음 처리 후에는 다시 `1..N`으로 바뀝니다.
+- JSON 내부의 안정 ID는 절대 renumber하지 않습니다.
+- Slack/Discord 과거 메시지를 자동으로 읽는 기능은 아닙니다. Hermes에 전달된 메시지나 사용자가 직접 준 링크를 기반으로 동작합니다.
 
-## Repository layout
+## 레포 구조
 
 ```text
 SKILL.md
 README.md
+README.en.md
 LICENSE
 templates/link_booklet.example.json
 scripts/link_booklet.py
 ```
 
-## License
+## 라이선스
 
 MIT
